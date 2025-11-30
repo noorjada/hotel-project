@@ -1,0 +1,89 @@
+CREATE TABLE room (
+  roomnum INT NOT NULL,
+  price INTEGER NOT NULL,
+  avalbility VARCHAR(255) NOT NULL,
+  bed_tybe VARCHAR(255) NOT NULL,
+  cleaning_status VARCHAR(255) NOT NULL,
+PRIMARY KEY (roomnum)
+);
+
+   
+
+
+CREATE TABLE Events (
+    EventID INT PRIMARY KEY,
+    EventName VARCHAR(255),
+    EventDate DATE,
+    Description VARCHAR(255),
+	 Status VARCHAR(20)
+);
+
+
+
+
+
+CREATE TABLE guest (
+  guestid INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  gender VARCHAR(255) NOT NULL,
+  nationality VARCHAR(255) NOT NULL,
+  room_occupied INT,
+  deposit INT,
+  phone VARCHAR(255) NOT NULL,
+  check_in DATE NOT NULL,
+  check_out DATE,
+PRIMARY KEY (guestid ),
+FOREIGN KEY (room_occupied) REFERENCES room(roomnum)
+
+);
+
+
+
+CREATE TABLE department (
+    dep_name VARCHAR(255) NOT NULL,
+    
+   dep_num INT NOT NULL,
+    dep_floor INT NOT NULL,
+    dep_employees INT NOT NULL,
+    PRIMARY KEY (dep_num)
+    
+);
+
+
+
+CREATE TABLE employee (
+    name VARCHAR(255) NOT NULL,
+
+   
+    employeeid INT NOT NULL,
+age VARCHAR(255) NOT NULL,
+gender VARCHAR(255) NOT NULL,
+    Job_title VARCHAR(255) NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    dep_name VARCHAR(255) NOT NULL,
+    Email VARCHAR(255),
+    Phone VARCHAR(255),
+    
+    Dep_no INT NOT NULL,
+    PRIMARY KEY (employeeid),
+    FOREIGN KEY (Dep_no) REFERENCES department(dep_num)
+);
+
+
+CREATE TABLE Services (
+    serviceid INT NOT NULL,
+    service_name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    price DECIMAL(10,2) NOT NULL,
+    availability VARCHAR(255) NOT NULL,
+    PRIMARY KEY (ServiceID)
+);
+
+
+CREATE TABLE Buy (
+    ServiceID INT NOT NULL,
+    roomID INT NOT NULL,
+    PRIMARY KEY (ServiceID, roomID),
+    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID),
+    FOREIGN KEY (roomID) REFERENCES room(roomnum)
+);

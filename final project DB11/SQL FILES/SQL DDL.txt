@@ -1,0 +1,153 @@
+CREATE DATABASE hotel
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_United States.1252'
+    LC_CTYPE = 'English_United States.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+
+
+CREATE TABLE IF NOT EXISTS public.room
+(
+    roomnum integer NOT NULL,
+    price integer NOT NULL,
+    avalbility character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    bed_tybe character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    cleaning_status character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT room_pkey PRIMARY KEY (roomnum)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.room
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public.events
+(
+    eventid integer NOT NULL,
+    eventname character varying(255) COLLATE pg_catalog."default",
+    eventdate date,
+    description character varying(255) COLLATE pg_catalog."default",
+    status character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT events_pkey PRIMARY KEY (eventid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.events
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public.guest
+(
+    guestid integer NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    gender character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    nationality character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    room_occupied integer,
+    deposit integer,
+    phone character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    check_in date NOT NULL,
+    check_out date,
+    CONSTRAINT guest_pkey PRIMARY KEY (guestid),
+    CONSTRAINT guest_room_occupied_fkey FOREIGN KEY (room_occupied)
+        REFERENCES public.room (roomnum) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.guest
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public.department
+(
+    dep_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    dep_num integer NOT NULL,
+    dep_floor integer NOT NULL,
+    dep_employees integer NOT NULL,
+    CONSTRAINT department_pkey PRIMARY KEY (dep_num)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.department
+    OWNER to postgres;
+
+
+
+
+
+
+
+
+CREATE TABLE IF NOT EXISTS public.employee
+(
+    name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    employeeid integer NOT NULL,
+    age character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    gender character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    job_title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    salary numeric(10,2) NOT NULL,
+    dep_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(255) COLLATE pg_catalog."default",
+    phone character varying(255) COLLATE pg_catalog."default",
+    dep_no integer NOT NULL,
+    CONSTRAINT employee_pkey PRIMARY KEY (employeeid),
+    CONSTRAINT employee_dep_no_fkey FOREIGN KEY (dep_no)
+        REFERENCES public.department (dep_num) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.employee
+    OWNER to postgres;
+
+
+
+
+CREATE TABLE IF NOT EXISTS public.services
+(
+    serviceid integer NOT NULL,
+    service_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    description character varying(255) COLLATE pg_catalog."default",
+    price numeric(10,2) NOT NULL,
+    availability character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT services_pkey PRIMARY KEY (serviceid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.services
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS public.buy
+(
+    serviceid integer NOT NULL,
+    roomid integer NOT NULL,
+    CONSTRAINT buy_pkey PRIMARY KEY (serviceid, roomid),
+    CONSTRAINT buy_roomid_fkey FOREIGN KEY (roomid)
+        REFERENCES public.room (roomnum) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT buy_serviceid_fkey FOREIGN KEY (serviceid)
+        REFERENCES public.services (serviceid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.buy
+    OWNER to postgres;
